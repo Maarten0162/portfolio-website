@@ -29,14 +29,21 @@ export default function Terminal() {
   console.log(inputNr)
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "ArrowUp"){
-      if(inputNr > 0){
+    if (event.key === "ArrowUp") {
+      if(inputNr > 0) {
         setInput(history[inputNr -1].input)
-        setLastInput(inputNr);
+        setLastInput(inputNr -1);
       }
       console.log("inputNR: " + inputNr)
     } 
-    if (event.key === "ArrowDown") console.log("Down arrow pressed");
+    else if (event.key === "ArrowDown") {
+        if(inputNr < history.length -1){
+        setInput(history[inputNr +1].input)
+        setLastInput(inputNr +1);
+      }
+    }else {
+      setLastInput(history.length)
+    }
   };
 
   const animateDelayedOutput = async (lines: DelayedLine[], commandInput: string) => {
