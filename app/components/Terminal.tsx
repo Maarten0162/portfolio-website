@@ -161,10 +161,9 @@ export default function Terminal() {
       return null;
     } else if (command === "projects") {
       const projectsLines: DelayedLine[] = [
-        { text: "[ 💾 Listing mounted disks... ]\n", delay: 0 },
-        { text: "FITNESS_TRACKER.DSK\n", delay: 400 },
-        { text: "MEMORYBOOK.DSK\n", delay: 300 },
-        { text: "PEAKY_BOARDGAME.DSK", delay: 300 }
+        { text: "\n[ 💾 Listing mounted disks... ]\n", delay: 0 },
+        { text: `${1} FITNESS_TRACKER.DSK\n`, delay: 400 },
+        { text: `${2} PEAKY_BOARDGAME.DSK\n\n`, delay: 300 }
       ];
       await animateDelayedOutput(projectsLines, cmd);
       return null;
@@ -178,7 +177,7 @@ export default function Terminal() {
       // Define your projects list
       const projectData: Record<string, DelayedLine[]> = {
         fitness: [
-          { text: "[ 💾 Mounting FITNESS_TRACKER.DSK... ]\n", delay: 0 },
+          { text: "[ 💾 Mounting FITNESS.DSK... ]\n", delay: 0 },
           { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
           { image: "/download.png", imageAlt: "Fitness.DSK", delay: 400 },
           { text: "\nProject: Fitness Tracker App\n", delay: 100 },
@@ -188,15 +187,22 @@ export default function Terminal() {
           { text: "Achievements unlock as users reach milestones.", delay: 0 }
         ],
         peaky: [
-          { text: "[ 💾 Mounting PEAKY_BOARDGAME.DSK... ]\n", delay: 0 },
+          { text: "[ 💾 Mounting PEAKY.DSK... ]\n", delay: 0 },
           { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
           { image: "/download.png", imageAlt: "Peaky.DSK", delay: 400 },
           { text: "\nProject: Fitness Tracker App\n", delay: 100 },
           { text: "Tech: Godot, C#\n", delay: 300 },
           { text: "Description:\n", delay: 300 },
           { text: "Boardgame inspired by Mario Party and Peaky Blinders.", delay: 300 }
-        ]
+        ],
+
+        
+        "1": [],
+        "2": []
       };
+
+      projectData["1"] = projectData.fitness;
+      projectData["2"] = projectData.peaky;
 
       const selectedProject = projectData[arg];
 
