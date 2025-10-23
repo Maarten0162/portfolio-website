@@ -46,3 +46,16 @@ body {
 .--font-DOSfont {
   font-family: var(--font-DOSfont);
 }
+
+
+.pixelate img {
+  width: 100%;
+  transform: scale(0.1); /* shrink */
+  image-rendering: pixelated;
+  filter: contrast(200%) saturate(120%);
+}
+
+.pixelate {
+  transform: scale(10); /* scale back up */
+  overflow: hidden;
+}
