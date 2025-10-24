@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { DOSFONT } from "../fonts";
+import Image from "next/image";
 
 interface Command {
   input: string;
@@ -109,19 +110,20 @@ export default function Terminal() {
 
       if (line.image) {
         accumulatedOutput.push(
-          <div className="inline-block border border-white ml-22 p-2 text-center">
-            <img
+          <div key={`imagecontainer-${commandIndex}`} className="inline-block border border-white ml-22 p-2 text-center">
+            <Image
               key={`image-${commandIndex}-${i}`}
               src={line.image}
               alt={line.imageAlt || "Terminal image"}
               className="max-w-full h-auto my-2 "
               width={128}
+              height={128}
               style={{ imageRendering: 'pixelated' }}>
 
-            </img>
+            </Image>
             <span
               className="block mt-1 text-sm text-white"
-              key={`image-desc-${i}`}>
+              key={`image-desc-${commandIndex}-${i}`}>
 
               {line.imageAlt}
             </span>
