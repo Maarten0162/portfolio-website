@@ -11,19 +11,25 @@ interface Command {
 
 type DelayedLine = {
   text?: string;
+  clickabletext?: string;
   image?: string; // URL to image
   imageAlt?: string; // Alt text for accessibility
   delay: number;
 }
 
 export default function Terminal() {
-  const [history, setHistory] = useState<Command[]>([]);
+  const [history, setHistory] = useState<Command[ ]>([]);
   const [input, setInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [inputNr, setLastInput] = useState(history.length)
+  const [inputNr, setLastInput] = useState(history.length);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const focusAndSetCursorToEnd = () => {
     if (inputRef.current) {
@@ -33,6 +39,12 @@ export default function Terminal() {
       inputRef.current.setSelectionRange(length, length);
     }
   };
+
+  function onClick(inputText: string) {
+  return () => {
+    setInput(inputText);
+  };
+}
 
 
   console.log(inputNr)
@@ -82,7 +94,16 @@ export default function Terminal() {
 
       if (line.text) {
         accumulatedOutput.push(
-          <span key={`text-${i}`}>{line.text}</span>
+          <span key={`text-${commandIndex}-${i}`}>{line.text}</span>
+        );
+
+      }
+
+      if (line.clickabletext) {
+        accumulatedOutput.push(
+          <span
+          key={`clickable-${commandIndex}-${i}`}
+          onClick={onClick(line.clickabletext)} className="cursor-pointer">{line.clickabletext}</span>
         );
       }
 
@@ -90,7 +111,7 @@ export default function Terminal() {
         accumulatedOutput.push(
           <div className="inline-block border border-white ml-22 p-2 text-center">
             <img
-              key={`image-${i}`}
+              key={`image-${commandIndex}-${i}`}
               src={line.image}
               alt={line.imageAlt || "Terminal image"}
               className="max-w-full h-auto my-2 "
@@ -107,6 +128,7 @@ export default function Terminal() {
           </div>
         );
       }
+      
 
       // Update the output with accumulated content
       setHistory(prev => {
@@ -137,10 +159,13 @@ export default function Terminal() {
     if (command === "help") {
       const helpLines: DelayedLine[] = [
         { text: "Available commands: ", delay: 200 },
-        { text: "about, ", delay: 100 },
-        { text: "projects, ", delay: 100 },
-        { text: "project + ID, ", delay: 100 },
-        { text: "clear", delay: 100 }
+        { clickabletext: "about", delay: 100 },
+        { text: ", ", delay: 0 },
+        { clickabletext: "projects", delay: 100 },
+        { text: ", ", delay: 0 },
+        { clickabletext: "project [id]", delay: 100 },
+        { text: ", ", delay: 0 },
+        { clickabletext: "clear", delay: 100 }
       ];
       await animateDelayedOutput(helpLines, cmd);
       return null;
@@ -162,19 +187,17 @@ export default function Terminal() {
     } else if (command === "projects") {
       const projectsLines: DelayedLine[] = [
         { text: "\n[ 💾 Listing mounted disks... ]\n", delay: 0 },
-        { text: `${1} FITNESS_TRACKER.DSK\n`, delay: 400 },
-        { text: `${2} PEAKY_BOARDGAME.DSK\n\n`, delay: 300 }
+        { text: `${1} FITNESS.DSK\n`, delay: 400 },
+        { text: `${2} PEAKY.DSK\n\n`, delay: 300 }
       ];
       await animateDelayedOutput(projectsLines, cmd);
       return null;
     } else if (command === "project") {
       if (!arg) {
-        // No ID provided
         setHistory(prev => [...prev, { input: cmd, output: "Usage: project <id>" }]);
         return null;
       }
 
-      // Define your projects list
       const projectData: Record<string, DelayedLine[]> = {
         fitness: [
           { text: "[ 💾 Mounting FITNESS.DSK... ]\n", delay: 0 },
@@ -182,9 +205,9 @@ export default function Terminal() {
           { image: "/download.png", imageAlt: "Fitness.DSK", delay: 400 },
           { text: "\nProject: Fitness Tracker App\n", delay: 100 },
           { text: "Tech: C#, MVC, .NET 8\n", delay: 300 },
-          { text: "Description:", delay: 300 },
-          { text: "Gamified fitness tracker with calorie and workout logging.", delay: 300 },
-          { text: "Achievements unlock as users reach milestones.", delay: 0 }
+          { text: "Description:\n", delay: 300 },
+          { text: "Gamified fitness tracker with calorie and workout logging.\n", delay: 300 },
+          { text: "Achievements unlock as users reach milestones.\n", delay: 0 }
         ],
         peaky: [
           { text: "[ 💾 Mounting PEAKY.DSK... ]\n", delay: 0 },
@@ -193,7 +216,7 @@ export default function Terminal() {
           { text: "\nProject: Fitness Tracker App\n", delay: 100 },
           { text: "Tech: Godot, C#\n", delay: 300 },
           { text: "Description:\n", delay: 300 },
-          { text: "Boardgame inspired by Mario Party and Peaky Blinders.", delay: 300 }
+          { text: "Boardgame inspired by Mario Party and Peaky Blinders.\n", delay: 300 }
         ],
 
         
@@ -217,6 +240,9 @@ export default function Terminal() {
     } else if (command === "clear") {
       setHistory([]);
       setLastInput(history.length)
+      setTimeout(() => {
+          focusAndSetCursorToEnd();
+        }, 0);
       return "";
     } else {
       return `Unknown command: ${cmd}`;
@@ -259,10 +285,21 @@ export default function Terminal() {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+  scrollToBottom();
+}, [history]);
+
   return (
     <div className={`${DOSFONT.className} min-h-screen bg-black text-xl text-white p-4`}
       onClick={() => inputRef.current?.focus()}
     >
+      <span style={{ whiteSpace: 'pre-line' }}>{'Type "'}
+        <span
+        onClick={onClick("help")} className="cursor-pointer">{'help'}</span>
+        <span>{'" for a list of commands\n\n'}</span>
+      </span>
+      
       {history.map((item, i) => (
         <div key={i}>
           <div key={"input-" + i}>C:\Maarten\Portfolio&gt; {item.input}</div>
@@ -285,6 +322,8 @@ export default function Terminal() {
           disabled={isProcessing}
         />
       </form>
+
+      <div ref={bottomRef} />
     </div>
   );
 }
