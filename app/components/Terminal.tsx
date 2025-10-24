@@ -24,7 +24,16 @@ export default function Terminal() {
   const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputNr, setLastInput] = useState(history.length);
+  const [matchAmount, setMatches] = useState(0);
+  const [matchIndex, setMatchIndex] = useState(0);
+  const [isTabbing, setIsTabbing] = useState(false);
+
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const commandList = ["help", "about", "projects", "project + [id]", "clear"];
+  const [trimmedInput, setTrimmedInput] = useState("");
+
+
 
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -51,8 +60,37 @@ export default function Terminal() {
   console.log(inputNr)
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "ArrowUp") {
+    if (event.key === "Tab") {
       event.preventDefault();
+      if (!isTabbing)
+      {
+        setTrimmedInput(input.trim());
+        setIsTabbing(true);
+      }
+      const matches = commandList.filter((cmd) =>
+        cmd.toLowerCase().startsWith(trimmedInput.toLowerCase()), 0);
+
+      const length = matches.length;
+      setMatches(length);
+      
+      let newIndex = matchIndex + 1;
+        if (newIndex >= length) {
+          newIndex = 0; // loop back to first match
+        }
+
+      setMatchIndex(newIndex)
+      
+
+      if(matches[matchIndex]){
+        setInput(matches[matchIndex])
+
+      }else console.log("matchindex invallid " + matchIndex + "matches lenght " + matches.length + " " + matches)
+    
+    }
+    else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setIsTabbing(false);
+
       if (inputNr > 0) {
         const previousInput = history[inputNr - 1].input;
         setInput(previousInput);
@@ -67,6 +105,8 @@ export default function Terminal() {
     }
     else if (event.key === "ArrowDown") {
       event.preventDefault();
+      setIsTabbing(false);
+
       if (inputNr < history.length - 1) {
         setInput(history[inputNr + 1].input)
         setLastInput(inputNr + 1);
@@ -75,7 +115,9 @@ export default function Terminal() {
         }, 0);
       }
     } else {
-      setLastInput(history.length)
+      setLastInput(history.length);
+      setIsTabbing(false);
+
     }
   };
 
@@ -124,7 +166,6 @@ export default function Terminal() {
             <span
               className="block mt-1 text-sm text-white"
               key={`image-desc-${commandIndex}-${i}`}>
-
               {line.imageAlt}
             </span>
           </div>
