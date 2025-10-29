@@ -13,8 +13,8 @@ interface Command {
 export type DelayedLine = {
   text?: string;
   clickabletext?: string;
-  image?: string; // URL to image
-  imageAlt?: string; // Alt text for accessibility
+  image?: string;
+  imageAlt?: string;
   delay: number;
 }
 
@@ -124,6 +124,8 @@ export default function Terminal({projectData}: {projectData : Record<string, De
   };
 
   const animateDelayedOutput = async (lines: DelayedLine[], commandInput: string) => {
+    console.log(lines[0]); // inside animateDelayedOutput
+
     console.log(lines)
 
     const commandIndex = history.length;
@@ -133,8 +135,8 @@ export default function Terminal({projectData}: {projectData : Record<string, De
 
     for (let i = 0; i < lines.length; i++) {
 
-      const line = lines[i];
-    console.log(line)
+      const line : DelayedLine = lines[i];
+    console.log(line.text)
 
 
       if (line.delay > 0) {
@@ -142,15 +144,14 @@ export default function Terminal({projectData}: {projectData : Record<string, De
       }
 
       if (line.text) {
-    console.log(line.text)
         accumulatedOutput.push(
+          
           <span key={`text-${commandIndex}-${i}`}>{line.text}</span>
         );
 
       }
 
       if (line.clickabletext) {
-    console.log(line.clickabletext)
 
         accumulatedOutput.push(
           <span
@@ -160,7 +161,6 @@ export default function Terminal({projectData}: {projectData : Record<string, De
       }
 
       if (line.image) {
-    console.log(line.image)
 
         accumulatedOutput.push(
           <div key={`imagecontainer-${commandIndex}`} className="inline-block border border-white ml-22 p-2 text-center">
@@ -236,11 +236,17 @@ export default function Terminal({projectData}: {projectData : Record<string, De
       await animateDelayedOutput(aboutLines, cmd);
       return null;
     } else if (command === "projects") {
-      const projectsLines: DelayedLine[] = [
-        { text: "\n[ 💾 Listing mounted disks... ]\n", delay: 0 },
-        { text: `${1} FITNESS.DSK\n`, delay: 400 },
-        { text: `${2} PEAKY.DSK\n\n`, delay: 300 }
-      ];
+      
+      // Assuming projectData is Record<string, DelayedLine[]>
+const projectsLines: DelayedLine[] = [
+  { text: "\n[ 💾 Listing mounted disks... ]\n", delay: 0 },
+  // dynamically add each project
+  ...Object.keys(projectData).map((key, index) => ({
+    text: `${index + 1} ${key.toUpperCase()}.DSK\n`,
+    delay: 300 + index * 100 // optional: stagger delays
+  }))
+];
+
       await animateDelayedOutput(projectsLines, cmd);
       return null;
     } else if (command === "project") {
@@ -248,35 +254,6 @@ export default function Terminal({projectData}: {projectData : Record<string, De
         setHistory(prev => [...prev, { input: cmd, output: "Usage: project <id>" }]);
         return null;
       }
-
-      // const projectData: Record<string, DelayedLine[]> = {
-      //   fitness: [
-      //     { text: "[ 💾 Mounting FITNESS.DSK... ]\n", delay: 0 },
-      //     { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
-      //     { image: "/download.png", imageAlt: "Fitness.DSK", delay: 400 },
-      //     { text: "\nProject: Fitness Tracker App\n", delay: 100 },
-      //     { text: "Tech: C#, MVC, .NET 8\n", delay: 300 },
-      //     { text: "Description:\n", delay: 300 },
-      //     { text: "Gamified fitness tracker with calorie and workout logging.\n", delay: 300 },
-      //     { text: "Achievements unlock as users reach milestones.\n", delay: 0 }
-      //   ],
-      //   peaky: [
-      //     { text: "[ 💾 Mounting PEAKY.DSK... ]\n", delay: 0 },
-      //     { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
-      //     { image: "/download.png", imageAlt: "Peaky.DSK", delay: 400 },
-      //     { text: "\nProject: Fitness Tracker App\n", delay: 100 },
-      //     { text: "Tech: Godot, C#\n", delay: 300 },
-      //     { text: "Description:\n", delay: 300 },
-      //     { text: "Boardgame inspired by Mario Party and Peaky Blinders.\n", delay: 300 }
-      //   ],
-
-        
-      //   "1": [],
-      //   "2": []
-      // };
-
-      // projectData["1"] = projectData.fitness;
-      // projectData["2"] = projectData.peaky;
 
       const selectedProject = projectData[arg];
 
