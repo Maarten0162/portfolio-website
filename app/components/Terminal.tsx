@@ -10,7 +10,7 @@ interface Command {
   isAnimating?: boolean;
 }
 
-type DelayedLine = {
+export type DelayedLine = {
   text?: string;
   clickabletext?: string;
   image?: string; // URL to image
@@ -18,7 +18,9 @@ type DelayedLine = {
   delay: number;
 }
 
-export default function Terminal() {
+
+export default function Terminal({projectData}: {projectData : Record<string, DelayedLine[]>}) {
+
   const [history, setHistory] = useState<Command[ ]>([]);
   const [input, setInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -30,7 +32,7 @@ export default function Terminal() {
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const commandList = ["help", "about", "projects", "project + [id]", "clear"];
+  const commandList = ["help", "about", "projects", "project + <id>", "clear"];
   const [trimmedInput, setTrimmedInput] = useState("");
 
 
@@ -58,6 +60,8 @@ export default function Terminal() {
 
 
   console.log(inputNr)
+
+  
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Tab") {
@@ -95,8 +99,6 @@ export default function Terminal() {
         const previousInput = history[inputNr - 1].input;
         setInput(previousInput);
         setLastInput(inputNr - 1);
-
-        // Always set cursor to end after setting input from history
         setTimeout(() => {
           focusAndSetCursorToEnd();
         }, 0);
@@ -122,20 +124,25 @@ export default function Terminal() {
   };
 
   const animateDelayedOutput = async (lines: DelayedLine[], commandInput: string) => {
-    // Add initial empty command to history
+    console.log(lines)
+
     const commandIndex = history.length;
     setHistory(prev => [...prev, { input: commandInput, output: [], isAnimating: true }]);
 
     const accumulatedOutput: React.ReactNode[] = [];
 
     for (let i = 0; i < lines.length; i++) {
+
       const line = lines[i];
+    console.log(line)
+
 
       if (line.delay > 0) {
         await delay(line.delay);
       }
 
       if (line.text) {
+    console.log(line.text)
         accumulatedOutput.push(
           <span key={`text-${commandIndex}-${i}`}>{line.text}</span>
         );
@@ -143,6 +150,8 @@ export default function Terminal() {
       }
 
       if (line.clickabletext) {
+    console.log(line.clickabletext)
+
         accumulatedOutput.push(
           <span
           key={`clickable-${commandIndex}-${i}`}
@@ -151,6 +160,8 @@ export default function Terminal() {
       }
 
       if (line.image) {
+    console.log(line.image)
+
         accumulatedOutput.push(
           <div key={`imagecontainer-${commandIndex}`} className="inline-block border border-white ml-22 p-2 text-center">
             <Image
@@ -185,14 +196,11 @@ export default function Terminal() {
       });
     }
 
-    // Mark animation as complete
     setHistory(prev => {
       const newHistory = [...prev];
       newHistory[commandIndex].isAnimating = false;
       return newHistory;
     });
-
-    // Focus the input after animation completes
     inputRef.current?.focus();
   };
 
@@ -206,7 +214,7 @@ export default function Terminal() {
         { text: ", ", delay: 0 },
         { clickabletext: "projects", delay: 100 },
         { text: ", ", delay: 0 },
-        { clickabletext: "project [id]", delay: 100 },
+        { clickabletext: "project <id>", delay: 100 },
         { text: ", ", delay: 0 },
         { clickabletext: "clear", delay: 100 }
       ];
@@ -241,36 +249,38 @@ export default function Terminal() {
         return null;
       }
 
-      const projectData: Record<string, DelayedLine[]> = {
-        fitness: [
-          { text: "[ 💾 Mounting FITNESS.DSK... ]\n", delay: 0 },
-          { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
-          { image: "/download.png", imageAlt: "Fitness.DSK", delay: 400 },
-          { text: "\nProject: Fitness Tracker App\n", delay: 100 },
-          { text: "Tech: C#, MVC, .NET 8\n", delay: 300 },
-          { text: "Description:\n", delay: 300 },
-          { text: "Gamified fitness tracker with calorie and workout logging.\n", delay: 300 },
-          { text: "Achievements unlock as users reach milestones.\n", delay: 0 }
-        ],
-        peaky: [
-          { text: "[ 💾 Mounting PEAKY.DSK... ]\n", delay: 0 },
-          { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
-          { image: "/download.png", imageAlt: "Peaky.DSK", delay: 400 },
-          { text: "\nProject: Fitness Tracker App\n", delay: 100 },
-          { text: "Tech: Godot, C#\n", delay: 300 },
-          { text: "Description:\n", delay: 300 },
-          { text: "Boardgame inspired by Mario Party and Peaky Blinders.\n", delay: 300 }
-        ],
+      // const projectData: Record<string, DelayedLine[]> = {
+      //   fitness: [
+      //     { text: "[ 💾 Mounting FITNESS.DSK... ]\n", delay: 0 },
+      //     { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
+      //     { image: "/download.png", imageAlt: "Fitness.DSK", delay: 400 },
+      //     { text: "\nProject: Fitness Tracker App\n", delay: 100 },
+      //     { text: "Tech: C#, MVC, .NET 8\n", delay: 300 },
+      //     { text: "Description:\n", delay: 300 },
+      //     { text: "Gamified fitness tracker with calorie and workout logging.\n", delay: 300 },
+      //     { text: "Achievements unlock as users reach milestones.\n", delay: 0 }
+      //   ],
+      //   peaky: [
+      //     { text: "[ 💾 Mounting PEAKY.DSK... ]\n", delay: 0 },
+      //     { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
+      //     { image: "/download.png", imageAlt: "Peaky.DSK", delay: 400 },
+      //     { text: "\nProject: Fitness Tracker App\n", delay: 100 },
+      //     { text: "Tech: Godot, C#\n", delay: 300 },
+      //     { text: "Description:\n", delay: 300 },
+      //     { text: "Boardgame inspired by Mario Party and Peaky Blinders.\n", delay: 300 }
+      //   ],
 
         
-        "1": [],
-        "2": []
-      };
+      //   "1": [],
+      //   "2": []
+      // };
 
-      projectData["1"] = projectData.fitness;
-      projectData["2"] = projectData.peaky;
+      // projectData["1"] = projectData.fitness;
+      // projectData["2"] = projectData.peaky;
 
       const selectedProject = projectData[arg];
+
+      console.log(selectedProject);
 
       if (!selectedProject) {
         setHistory(prev => [...prev, { input: cmd, output: `Unknown project: ${arg}` }]);
