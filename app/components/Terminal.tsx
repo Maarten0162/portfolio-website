@@ -73,7 +73,6 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
         cmd.toLowerCase().startsWith(trimmedInput.toLowerCase()), 0);
 
       const length = matches.length;
-      setMatches(length);
 
       let newIndex = matchIndex + 1;
       if (newIndex >= length) {
