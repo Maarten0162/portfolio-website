@@ -26,7 +26,6 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
   const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputNr, setLastInput] = useState(history.length);
-  const [matchAmount, setMatches] = useState(0);
   const [matchIndex, setMatchIndex] = useState(0);
   const [isTabbing, setIsTabbing] = useState(false);
 

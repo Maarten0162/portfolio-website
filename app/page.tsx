@@ -1,7 +1,14 @@
-import Image from "next/image";
 import Terminal from "./components/Terminal";
 import { createServer } from "@/lib/supabase/server";
 import { DelayedLine } from "./components/Terminal";
+
+interface SupabaseLine {
+  type: "text" | "clickabletext" | "image" | string;
+  content: string;
+  delay?: number;
+  alt?: string;
+}
+
 
 
 export default async function Home() {
@@ -19,7 +26,7 @@ export default async function Home() {
   projects?.forEach((p) => {
     if (Array.isArray(p.data.lines)) {
       // Normalize each line from Supabase JSON
-      const normalizedLines: DelayedLine[] = p.data.lines.map((l: any) => {
+      const normalizedLines: DelayedLine[] = p.data.lines.map((l: SupabaseLine) => {
         switch (l.type) {
           case "text":
             const realText = l.content.replace(/\\n/g, "\n");
