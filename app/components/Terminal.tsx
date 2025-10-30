@@ -19,9 +19,9 @@ export type DelayedLine = {
 }
 
 
-export default function Terminal({projectData}: {projectData : Record<string, DelayedLine[]>}) {
+export default function Terminal({ projectData }: { projectData: Record<string, DelayedLine[]> }) {
 
-  const [history, setHistory] = useState<Command[ ]>([]);
+  const [history, setHistory] = useState<Command[]>([]);
   const [input, setInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,21 +53,20 @@ export default function Terminal({projectData}: {projectData : Record<string, De
   };
 
   function onClick(inputText: string) {
-  return () => {
-    setInput(inputText);
-  };
-}
+    return () => {
+      setInput(inputText);
+    };
+  }
 
 
   console.log(inputNr)
 
-  
+
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Tab") {
       event.preventDefault();
-      if (!isTabbing)
-      {
+      if (!isTabbing) {
         setTrimmedInput(input.trim());
         setIsTabbing(true);
       }
@@ -76,20 +75,20 @@ export default function Terminal({projectData}: {projectData : Record<string, De
 
       const length = matches.length;
       setMatches(length);
-      
+
       let newIndex = matchIndex + 1;
-        if (newIndex >= length) {
-          newIndex = 0; // loop back to first match
-        }
+      if (newIndex >= length) {
+        newIndex = 0;
+      }
 
       setMatchIndex(newIndex)
-      
 
-      if(matches[matchIndex]){
+
+      if (matches[matchIndex]) {
         setInput(matches[matchIndex])
 
-      }else console.log("matchindex invallid " + matchIndex + "matches lenght " + matches.length + " " + matches)
-    
+      } else console.log("matchindex invallid " + matchIndex + "matches lenght " + matches.length + " " + matches)
+
     }
     else if (event.key === "ArrowUp") {
       event.preventDefault();
@@ -135,8 +134,8 @@ export default function Terminal({projectData}: {projectData : Record<string, De
 
     for (let i = 0; i < lines.length; i++) {
 
-      const line : DelayedLine = lines[i];
-    console.log(line.text)
+      const line: DelayedLine = lines[i];
+      console.log(line.text)
 
 
       if (line.delay > 0) {
@@ -145,7 +144,7 @@ export default function Terminal({projectData}: {projectData : Record<string, De
 
       if (line.text) {
         accumulatedOutput.push(
-          
+
           <span key={`text-${commandIndex}-${i}`}>{line.text}</span>
         );
 
@@ -155,8 +154,8 @@ export default function Terminal({projectData}: {projectData : Record<string, De
 
         accumulatedOutput.push(
           <span
-          key={`clickable-${commandIndex}-${i}`}
-          onClick={onClick(line.clickabletext)} className="cursor-pointer">{line.clickabletext}</span>
+            key={`clickable-${commandIndex}-${i}`}
+            onClick={onClick(line.clickabletext)} className="cursor-pointer">{line.clickabletext}</span>
         );
       }
 
@@ -182,7 +181,7 @@ export default function Terminal({projectData}: {projectData : Record<string, De
           </div>
         );
       }
-      
+
 
       // Update the output with accumulated content
       setHistory(prev => {
@@ -236,16 +235,16 @@ export default function Terminal({projectData}: {projectData : Record<string, De
       await animateDelayedOutput(aboutLines, cmd);
       return null;
     } else if (command === "projects") {
-      
+
       // Assuming projectData is Record<string, DelayedLine[]>
-const projectsLines: DelayedLine[] = [
-  { text: "\n[ 💾 Listing mounted disks... ]\n", delay: 0 },
-  // dynamically add each project
-  ...Object.keys(projectData).map((key, index) => ({
-    text: `${index + 1} ${key.toUpperCase()}.DSK\n`,
-    delay: 300 + index * 100 // optional: stagger delays
-  }))
-];
+      const projectsLines: DelayedLine[] = [
+        { text: "\n[ 💾 Listing mounted disks... ]\n", delay: 0 },
+        // dynamically add each project
+        ...Object.keys(projectData).map((key, index) => ({
+          text: `${index + 1} ${key.toUpperCase()}.DSK\n`,
+          delay: 300 + index * 100 // optional: stagger delays
+        }))
+      ];
 
       await animateDelayedOutput(projectsLines, cmd);
       return null;
@@ -255,9 +254,16 @@ const projectsLines: DelayedLine[] = [
         return null;
       }
 
-      const selectedProject = projectData[arg];
+      // Build a lookup table for both names and numbers
+      const keys = Object.keys(projectData);
+      const lookup: Record<string, DelayedLine[]> = {};
 
-      console.log(selectedProject);
+      keys.forEach((key, i) => {
+        lookup[key.toLowerCase()] = projectData[key];         // access by name
+        lookup[(i + 1).toString()] = projectData[key];         // access by number
+      });
+
+      const selectedProject = lookup[arg.toLowerCase()]; // match by name or number
 
       if (!selectedProject) {
         setHistory(prev => [...prev, { input: cmd, output: `Unknown project: ${arg}` }]);
@@ -267,12 +273,13 @@ const projectsLines: DelayedLine[] = [
       await animateDelayedOutput(selectedProject, cmd);
       return null;
 
+
     } else if (command === "clear") {
       setHistory([]);
       setLastInput(history.length)
       setTimeout(() => {
-          focusAndSetCursorToEnd();
-        }, 0);
+        focusAndSetCursorToEnd();
+      }, 0);
       return "";
     } else {
       return `Unknown command: ${cmd}`;
@@ -317,8 +324,8 @@ const projectsLines: DelayedLine[] = [
   }, []);
 
   useEffect(() => {
-  scrollToBottom();
-}, [history]);
+    scrollToBottom();
+  }, [history]);
 
   return (
     <div className={`${DOSFONT.className} min-h-screen bg-black text-xl text-white p-4`}
@@ -326,10 +333,10 @@ const projectsLines: DelayedLine[] = [
     >
       <span style={{ whiteSpace: 'pre-line' }}>{'Type "'}
         <span
-        onClick={onClick("help")} className="cursor-pointer">{'help'}</span>
+          onClick={onClick("help")} className="cursor-pointer">{'help'}</span>
         <span>{'" for a list of commands\n\n'}</span>
       </span>
-      
+
       {history.map((item, i) => (
         <div key={i}>
           <div key={"input-" + i}>C:\Maarten\Portfolio&gt; {item.input}</div>
