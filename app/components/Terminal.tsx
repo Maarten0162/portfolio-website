@@ -28,6 +28,8 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
   const [inputNr, setLastInput] = useState(history.length);
   const [matchIndex, setMatchIndex] = useState(0);
   const [isTabbing, setIsTabbing] = useState(false);
+  const [currentImage, setCurrentImage] = useState<{ src: string; alt?: string } | null>(null);
+
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -158,27 +160,28 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
       }
 
       if (line.image) {
-
         accumulatedOutput.push(
-          <div key={`imagecontainer-${commandIndex}`} className="inline-block border border-white ml-22 p-2 text-center">
+          <div
+            key={`imagecontainer-${commandIndex}-${i}`}
+            className="inline-block border border-white ml-22 p-2 text-center cursor-pointer hover:bg-gray-800 transition"
+            onClick={() => setCurrentImage({ src: line.image!, alt: line.imageAlt })}
+            title="Click to preview"
+          >
             <Image
-              key={`image-${commandIndex}-${i}`}
               src={line.image}
               alt={line.imageAlt || "Terminal image"}
-              className="max-w-full h-auto my-2 "
+              className="max-w-full h-auto my-2"
               width={128}
               height={128}
-              style={{ imageRendering: 'pixelated' }}>
-
-            </Image>
-            <span
-              className="block mt-1 text-sm text-white"
-              key={`image-desc-${commandIndex}-${i}`}>
+              style={{ imageRendering: "pixelated" }}
+            />
+            <span className="block mt-1 text-sm text-white">
               {line.imageAlt}
             </span>
           </div>
         );
       }
+
 
 
       // Update the output with accumulated content
@@ -326,39 +329,68 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
   }, [history]);
 
   return (
-    <div className={`${DOSFONT.className} min-h-screen bg-black text-xl text-white p-4`}
-      onClick={() => inputRef.current?.focus()}
-    >
-      <span style={{ whiteSpace: 'pre-line' }}>{'Type "'}
-        <span
-          onClick={onClick("help")} className="cursor-pointer">{'help'}</span>
-        <span>{'" for a list of commands\n\n'}</span>
-      </span>
+    <div className="flex min-h-screen bg-black text-white">
+      {/* LEFT SIDE — Terminal (2/3 width) */}
+      <div
+        className={`${DOSFONT.className} w-2/3 p-4 text-xl overflow-y-auto`}
+        onClick={() => inputRef.current?.focus()}
+      >
+        <span style={{ whiteSpace: "pre-line" }}>
+          {'Type "'}
+          <span onClick={onClick("help")} className="cursor-pointer">{'help'}</span>
+          {'" for a list of commands\n\n'}
+        </span>
 
-      {history.map((item, i) => (
-        <div key={i}>
-          <div key={"input-" + i}>C:\Maarten\Portfolio&gt; {item.input}</div>
-          <div key={"output-" + i} className={`${DOSFONT.className}`}>
-            {item.output}
-            {item.isAnimating && <span className="animate-pulse">█</span>}
+        {history.map((item, i) => (
+          <div key={i}>
+            <div>C:\Maarten\Portfolio&gt; {item.input}</div>
+            <div className={DOSFONT.className}>
+              {item.output}
+              {item.isAnimating && <span className="animate-pulse">█</span>}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      <form onSubmit={handleSubmit}>
-        <span>C:\Maarten\Portfolio&gt; </span>
-        <input
-          ref={inputRef}
-          value={input}
-          onKeyDown={handleKeyDown}
-          onChange={(e) => setInput(e.target.value)}
-          className="bg-transparent border-none outline-none text-xl text-white w-3/4"
-          autoFocus
-          disabled={isProcessing}
-        />
-      </form>
+        <form onSubmit={handleSubmit}>
+          <span>C:\Maarten\Portfolio&gt; </span>
+          <input
+            ref={inputRef}
+            value={input}
+            onKeyDown={handleKeyDown}
+            onChange={(e) => setInput(e.target.value)}
+            className="bg-transparent border-none outline-none text-xl text-white w-3/4"
+            autoFocus
+            disabled={isProcessing}
+          />
+        </form>
 
-      <div ref={bottomRef} />
+        <div ref={bottomRef} />
+      </div>
+      <div className="fixed right-0 top-0 h-screen w-1/3 flex items-center justify-center p-4 border-l border-gray-700 bg-black">
+        {currentImage ? (
+          <div className="flex flex-col items-center">
+            <Image
+              src={currentImage.src}
+              alt={currentImage.alt || "Project image"}
+              width={512}
+              height={512}
+              className="rounded-lg shadow-lg cursor-pointer transition-transform hover:scale-105"
+              style={{ imageRendering: "pixelated" }}
+              onClick={() => setCurrentImage(null)}
+            />
+            {currentImage.alt && (
+              <span className="mt-2 text-sm text-gray-300">{currentImage.alt}</span>
+            )}
+            <span className="mt-1 text-xs text-gray-500 italic">(Click image to close)</span>
+          </div>
+        ) : (
+          <span className="text-gray-600 italic">Click an image to preview it here</span>
+        )}
+      </div>
+
     </div>
+
   );
+
+
 }
