@@ -3,6 +3,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { DOSFONT } from "../fonts";
 import Image from "next/image";
+import { commandAliases } from "@/lib/commandAlias";
+import { aboutLines } from "@/lib/commandResponses/aboutLines";
 
 interface Command {
   input: string;
@@ -35,7 +37,6 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
 
   const commandList = ["help", "about", "projects", "project + <id>", "clear"];
   const [trimmedInput, setTrimmedInput] = useState("");
-
 
 
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -204,8 +205,20 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
     inputRef.current?.focus();
   };
 
+  // Command aliases (Windows, Linux, macOS variants)
+
+
+
   const handleCommand = async (cmd: string) => {
-    const [command, arg] = cmd.trim().toLowerCase().split(" ");
+    const parts = cmd.trim().toLowerCase().split(" ");
+    let command = parts[0];
+    const arg = parts[1];
+
+    // Resolve command alias if it exists
+    if (commandAliases[command]) {
+      command = commandAliases[command];
+    }
+
 
     if (command === "help") {
       const helpLines: DelayedLine[] = [
@@ -221,18 +234,6 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
       await animateDelayedOutput(helpLines, cmd);
       return null;
     } else if (command === "about") {
-      const aboutLines: DelayedLine[] = [
-        { text: "\n*** LOADING USER PROFILE... ***\n", delay: 0 },
-        { text: "[ 💾 Reading MAARTEN.DAT ", delay: 300 },
-        { text: ".", delay: 300 },
-        { text: ".", delay: 300 },
-        { text: ". ", delay: 300 },
-        { text: "OK! ]\n", delay: 100 },
-        { text: "\nName: Maarten\n", delay: 200 },
-        { text: "Occupation: ICT Student\n", delay: 150 },
-        { text: "Specialization: Software & Game Development\n", delay: 150 },
-        { text: "Primary Tools: C#, Godot, .NET, Next.js\n\n", delay: 200 }
-      ];
       await animateDelayedOutput(aboutLines, cmd);
       return null;
     } else if (command === "projects") {
