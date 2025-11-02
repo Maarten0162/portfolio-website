@@ -5,6 +5,8 @@ import { DOSFONT } from "../fonts";
 import Image from "next/image";
 import { commandAliases } from "@/lib/commandAlias";
 import { aboutLines } from "@/lib/commandResponses/aboutLines";
+import { helpLines } from "@/lib/commandResponses/helpLines";
+import { getProjectsLines } from "@/lib/commandResponses/projectLines";
 
 interface Command {
   input: string;
@@ -48,20 +50,24 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
   const focusAndSetCursorToEnd = () => {
     if (inputRef.current) {
       inputRef.current.focus();
-      // Set cursor to the end of the input
       const length = inputRef.current.value.length;
       inputRef.current.setSelectionRange(length, length);
     }
   };
 
-  function onClick(inputText: string) {
-    return () => {
+  function onClick(inputText: string | undefined) {
+    console.log(inputText)
+    if (inputText) {
+      const firstWord = inputText.trim()[2]; //index 2 gets the number infront of the message 
+      console.log(firstWord)
+
+      if (!isNaN(Number(firstWord))) {
+        inputText = "project " + firstWord;
+      }
       setInput(inputText);
-    };
+    }
   }
 
-
-  console.log(inputNr)
 
 
 
@@ -88,7 +94,7 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
       if (matches[matchIndex]) {
         setInput(matches[matchIndex])
 
-      } else console.log("matchindex invallid " + matchIndex + "matches lenght " + matches.length + " " + matches)
+      }
 
     }
     else if (event.key === "ArrowUp") {
@@ -103,7 +109,6 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
           focusAndSetCursorToEnd();
         }, 0);
       }
-      console.log("inputNR: " + inputNr)
     }
     else if (event.key === "ArrowDown") {
       event.preventDefault();
@@ -124,10 +129,6 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
   };
 
   const animateDelayedOutput = async (lines: DelayedLine[], commandInput: string) => {
-    console.log(lines[0]); // inside animateDelayedOutput
-
-    console.log(lines)
-
     const commandIndex = history.length;
     setHistory(prev => [...prev, { input: commandInput, output: [], isAnimating: true }]);
 
@@ -136,7 +137,6 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
     for (let i = 0; i < lines.length; i++) {
 
       const line: DelayedLine = lines[i];
-      console.log(line.text)
 
 
       if (line.delay > 0) {
@@ -156,7 +156,7 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
         accumulatedOutput.push(
           <span
             key={`clickable-${commandIndex}-${i}`}
-            onClick={onClick(line.clickabletext)} className="cursor-pointer">{line.clickabletext}</span>
+            onClick={() => onClick(line.clickabletext)} className="cursor-pointer">{line.clickabletext}</span>
         );
       }
 
@@ -221,16 +221,6 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
 
 
     if (command === "help") {
-      const helpLines: DelayedLine[] = [
-        { text: "Available commands: ", delay: 200 },
-        { clickabletext: "about", delay: 100 },
-        { text: ", ", delay: 0 },
-        { clickabletext: "projects", delay: 100 },
-        { text: ", ", delay: 0 },
-        { clickabletext: "project <id>", delay: 100 },
-        { text: ", ", delay: 0 },
-        { clickabletext: "clear", delay: 100 }
-      ];
       await animateDelayedOutput(helpLines, cmd);
       return null;
     } else if (command === "about") {
@@ -239,14 +229,7 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
     } else if (command === "projects") {
 
       // Assuming projectData is Record<string, DelayedLine[]>
-      const projectsLines: DelayedLine[] = [
-        { text: "\n[ 💾 Listing mounted disks... ]\n", delay: 0 },
-        // dynamically add each project
-        ...Object.keys(projectData).map((key, index) => ({
-          text: `${index + 1} ${key.toUpperCase()}.DSK\n`,
-          delay: 300 + index * 100 // optional: stagger delays
-        }))
-      ];
+      const projectsLines: DelayedLine[] = getProjectsLines(projectData);
 
       await animateDelayedOutput(projectsLines, cmd);
       return null;
@@ -338,7 +321,8 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
       >
         <span style={{ whiteSpace: "pre-line" }}>
           {'Type "'}
-          <span onClick={onClick("help")} className="cursor-pointer">{'help'}</span>
+          <span onClick={() => onClick("help")} className="cursor-pointer">{'help'}</span>
+
           {'" for a list of commands\n\n'}
         </span>
 
