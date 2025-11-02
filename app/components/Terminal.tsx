@@ -3,6 +3,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { DOSFONT } from "../fonts";
 import Image from "next/image";
+import { commandAliases } from "@/lib/commandAlias";
+import { aboutLines } from "@/lib/commandResponses/aboutLines";
 
 interface Command {
   input: string;
@@ -10,29 +12,31 @@ interface Command {
   isAnimating?: boolean;
 }
 
-type DelayedLine = {
+export type DelayedLine = {
   text?: string;
   clickabletext?: string;
-  image?: string; // URL to image
-  imageAlt?: string; // Alt text for accessibility
+  image?: string;
+  imageAlt?: string;
   delay: number;
 }
 
-export default function Terminal() {
-  const [history, setHistory] = useState<Command[ ]>([]);
+
+export default function Terminal({ projectData }: { projectData: Record<string, DelayedLine[]> }) {
+
+  const [history, setHistory] = useState<Command[]>([]);
   const [input, setInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [inputNr, setLastInput] = useState(history.length);
-  const [matchAmount, setMatches] = useState(0);
   const [matchIndex, setMatchIndex] = useState(0);
   const [isTabbing, setIsTabbing] = useState(false);
+  const [currentImage, setCurrentImage] = useState<{ src: string; alt?: string } | null>(null);
+
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const commandList = ["help", "about", "projects", "project + [id]", "clear"];
+  const commandList = ["help", "about", "projects", "project + <id>", "clear"];
   const [trimmedInput, setTrimmedInput] = useState("");
-
 
 
   const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -51,19 +55,20 @@ export default function Terminal() {
   };
 
   function onClick(inputText: string) {
-  return () => {
-    setInput(inputText);
-  };
-}
+    return () => {
+      setInput(inputText);
+    };
+  }
 
 
   console.log(inputNr)
 
+
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Tab") {
       event.preventDefault();
-      if (!isTabbing)
-      {
+      if (!isTabbing) {
         setTrimmedInput(input.trim());
         setIsTabbing(true);
       }
@@ -71,21 +76,20 @@ export default function Terminal() {
         cmd.toLowerCase().startsWith(trimmedInput.toLowerCase()), 0);
 
       const length = matches.length;
-      setMatches(length);
-      
+
       let newIndex = matchIndex + 1;
-        if (newIndex >= length) {
-          newIndex = 0; // loop back to first match
-        }
+      if (newIndex >= length) {
+        newIndex = 0;
+      }
 
       setMatchIndex(newIndex)
-      
 
-      if(matches[matchIndex]){
+
+      if (matches[matchIndex]) {
         setInput(matches[matchIndex])
 
-      }else console.log("matchindex invallid " + matchIndex + "matches lenght " + matches.length + " " + matches)
-    
+      } else console.log("matchindex invallid " + matchIndex + "matches lenght " + matches.length + " " + matches)
+
     }
     else if (event.key === "ArrowUp") {
       event.preventDefault();
@@ -95,8 +99,6 @@ export default function Terminal() {
         const previousInput = history[inputNr - 1].input;
         setInput(previousInput);
         setLastInput(inputNr - 1);
-
-        // Always set cursor to end after setting input from history
         setTimeout(() => {
           focusAndSetCursorToEnd();
         }, 0);
@@ -122,14 +124,20 @@ export default function Terminal() {
   };
 
   const animateDelayedOutput = async (lines: DelayedLine[], commandInput: string) => {
-    // Add initial empty command to history
+    console.log(lines[0]); // inside animateDelayedOutput
+
+    console.log(lines)
+
     const commandIndex = history.length;
     setHistory(prev => [...prev, { input: commandInput, output: [], isAnimating: true }]);
 
     const accumulatedOutput: React.ReactNode[] = [];
 
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
+
+      const line: DelayedLine = lines[i];
+      console.log(line.text)
+
 
       if (line.delay > 0) {
         await delay(line.delay);
@@ -137,41 +145,45 @@ export default function Terminal() {
 
       if (line.text) {
         accumulatedOutput.push(
+
           <span key={`text-${commandIndex}-${i}`}>{line.text}</span>
         );
 
       }
 
       if (line.clickabletext) {
+
         accumulatedOutput.push(
           <span
-          key={`clickable-${commandIndex}-${i}`}
-          onClick={onClick(line.clickabletext)} className="cursor-pointer">{line.clickabletext}</span>
+            key={`clickable-${commandIndex}-${i}`}
+            onClick={onClick(line.clickabletext)} className="cursor-pointer">{line.clickabletext}</span>
         );
       }
 
       if (line.image) {
         accumulatedOutput.push(
-          <div key={`imagecontainer-${commandIndex}`} className="inline-block border border-white ml-22 p-2 text-center">
+          <div
+            key={`imagecontainer-${commandIndex}-${i}`}
+            className="inline-block border border-white ml-22 p-2 text-center cursor-pointer hover:bg-gray-800 transition"
+            onClick={() => setCurrentImage({ src: line.image!, alt: line.imageAlt })}
+            title="Click to preview"
+          >
             <Image
-              key={`image-${commandIndex}-${i}`}
               src={line.image}
               alt={line.imageAlt || "Terminal image"}
-              className="max-w-full h-auto my-2 "
+              className="max-w-full h-auto my-2"
               width={128}
               height={128}
-              style={{ imageRendering: 'pixelated' }}>
-
-            </Image>
-            <span
-              className="block mt-1 text-sm text-white"
-              key={`image-desc-${commandIndex}-${i}`}>
+              style={{ imageRendering: "pixelated" }}
+            />
+            <span className="block mt-1 text-sm text-white">
               {line.imageAlt}
             </span>
           </div>
         );
       }
-      
+
+
 
       // Update the output with accumulated content
       setHistory(prev => {
@@ -185,19 +197,28 @@ export default function Terminal() {
       });
     }
 
-    // Mark animation as complete
     setHistory(prev => {
       const newHistory = [...prev];
       newHistory[commandIndex].isAnimating = false;
       return newHistory;
     });
-
-    // Focus the input after animation completes
     inputRef.current?.focus();
   };
 
+  // Command aliases (Windows, Linux, macOS variants)
+
+
+
   const handleCommand = async (cmd: string) => {
-    const [command, arg] = cmd.trim().toLowerCase().split(" ");
+    const parts = cmd.trim().toLowerCase().split(" ");
+    let command = parts[0];
+    const arg = parts[1];
+
+    // Resolve command alias if it exists
+    if (commandAliases[command]) {
+      command = commandAliases[command];
+    }
+
 
     if (command === "help") {
       const helpLines: DelayedLine[] = [
@@ -206,33 +227,27 @@ export default function Terminal() {
         { text: ", ", delay: 0 },
         { clickabletext: "projects", delay: 100 },
         { text: ", ", delay: 0 },
-        { clickabletext: "project [id]", delay: 100 },
+        { clickabletext: "project <id>", delay: 100 },
         { text: ", ", delay: 0 },
         { clickabletext: "clear", delay: 100 }
       ];
       await animateDelayedOutput(helpLines, cmd);
       return null;
     } else if (command === "about") {
-      const aboutLines: DelayedLine[] = [
-        { text: "\n*** LOADING USER PROFILE... ***\n", delay: 0 },
-        { text: "[ 💾 Reading MAARTEN.DAT ", delay: 300 },
-        { text: ".", delay: 300 },
-        { text: ".", delay: 300 },
-        { text: ". ", delay: 300 },
-        { text: "OK! ]\n", delay: 100 },
-        { text: "\nName: Maarten\n", delay: 200 },
-        { text: "Occupation: ICT Student\n", delay: 150 },
-        { text: "Specialization: Software & Game Development\n", delay: 150 },
-        { text: "Primary Tools: C#, Godot, .NET, Next.js\n\n", delay: 200 }
-      ];
       await animateDelayedOutput(aboutLines, cmd);
       return null;
     } else if (command === "projects") {
+
+      // Assuming projectData is Record<string, DelayedLine[]>
       const projectsLines: DelayedLine[] = [
         { text: "\n[ 💾 Listing mounted disks... ]\n", delay: 0 },
-        { text: `${1} FITNESS.DSK\n`, delay: 400 },
-        { text: `${2} PEAKY.DSK\n\n`, delay: 300 }
+        // dynamically add each project
+        ...Object.keys(projectData).map((key, index) => ({
+          text: `${index + 1} ${key.toUpperCase()}.DSK\n`,
+          delay: 300 + index * 100 // optional: stagger delays
+        }))
       ];
+
       await animateDelayedOutput(projectsLines, cmd);
       return null;
     } else if (command === "project") {
@@ -241,36 +256,16 @@ export default function Terminal() {
         return null;
       }
 
-      const projectData: Record<string, DelayedLine[]> = {
-        fitness: [
-          { text: "[ 💾 Mounting FITNESS.DSK... ]\n", delay: 0 },
-          { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
-          { image: "/download.png", imageAlt: "Fitness.DSK", delay: 400 },
-          { text: "\nProject: Fitness Tracker App\n", delay: 100 },
-          { text: "Tech: C#, MVC, .NET 8\n", delay: 300 },
-          { text: "Description:\n", delay: 300 },
-          { text: "Gamified fitness tracker with calorie and workout logging.\n", delay: 300 },
-          { text: "Achievements unlock as users reach milestones.\n", delay: 0 }
-        ],
-        peaky: [
-          { text: "[ 💾 Mounting PEAKY.DSK... ]\n", delay: 0 },
-          { text: "[ ✓ Disk loaded successfully ]\n", delay: 1000 },
-          { image: "/download.png", imageAlt: "Peaky.DSK", delay: 400 },
-          { text: "\nProject: Fitness Tracker App\n", delay: 100 },
-          { text: "Tech: Godot, C#\n", delay: 300 },
-          { text: "Description:\n", delay: 300 },
-          { text: "Boardgame inspired by Mario Party and Peaky Blinders.\n", delay: 300 }
-        ],
+      // Build a lookup table for both names and numbers
+      const keys = Object.keys(projectData);
+      const lookup: Record<string, DelayedLine[]> = {};
 
-        
-        "1": [],
-        "2": []
-      };
+      keys.forEach((key, i) => {
+        lookup[key.toLowerCase()] = projectData[key];         // access by name
+        lookup[(i + 1).toString()] = projectData[key];         // access by number
+      });
 
-      projectData["1"] = projectData.fitness;
-      projectData["2"] = projectData.peaky;
-
-      const selectedProject = projectData[arg];
+      const selectedProject = lookup[arg.toLowerCase()]; // match by name or number
 
       if (!selectedProject) {
         setHistory(prev => [...prev, { input: cmd, output: `Unknown project: ${arg}` }]);
@@ -280,12 +275,13 @@ export default function Terminal() {
       await animateDelayedOutput(selectedProject, cmd);
       return null;
 
+
     } else if (command === "clear") {
       setHistory([]);
       setLastInput(history.length)
       setTimeout(() => {
-          focusAndSetCursorToEnd();
-        }, 0);
+        focusAndSetCursorToEnd();
+      }, 0);
       return "";
     } else {
       return `Unknown command: ${cmd}`;
@@ -330,43 +326,72 @@ export default function Terminal() {
   }, []);
 
   useEffect(() => {
-  scrollToBottom();
-}, [history]);
+    scrollToBottom();
+  }, [history]);
 
   return (
-    <div className={`${DOSFONT.className} min-h-screen bg-black text-xl text-white p-4`}
-      onClick={() => inputRef.current?.focus()}
-    >
-      <span style={{ whiteSpace: 'pre-line' }}>{'Type "'}
-        <span
-        onClick={onClick("help")} className="cursor-pointer">{'help'}</span>
-        <span>{'" for a list of commands\n\n'}</span>
-      </span>
-      
-      {history.map((item, i) => (
-        <div key={i}>
-          <div key={"input-" + i}>C:\Maarten\Portfolio&gt; {item.input}</div>
-          <div key={"output-" + i} className={`${DOSFONT.className}`}>
-            {item.output}
-            {item.isAnimating && <span className="animate-pulse">█</span>}
+    <div className="flex min-h-screen bg-black text-white">
+      {/* LEFT SIDE — Terminal (2/3 width) */}
+      <div
+        className={`${DOSFONT.className} w-2/3 p-4 text-xl overflow-y-auto`}
+        onClick={() => inputRef.current?.focus()}
+      >
+        <span style={{ whiteSpace: "pre-line" }}>
+          {'Type "'}
+          <span onClick={onClick("help")} className="cursor-pointer">{'help'}</span>
+          {'" for a list of commands\n\n'}
+        </span>
+
+        {history.map((item, i) => (
+          <div key={i}>
+            <div>C:\Maarten\Portfolio&gt; {item.input}</div>
+            <div className={DOSFONT.className}>
+              {item.output}
+              {item.isAnimating && <span className="animate-pulse">█</span>}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      <form onSubmit={handleSubmit}>
-        <span>C:\Maarten\Portfolio&gt; </span>
-        <input
-          ref={inputRef}
-          value={input}
-          onKeyDown={handleKeyDown}
-          onChange={(e) => setInput(e.target.value)}
-          className="bg-transparent border-none outline-none text-xl text-white w-3/4"
-          autoFocus
-          disabled={isProcessing}
-        />
-      </form>
+        <form onSubmit={handleSubmit}>
+          <span>C:\Maarten\Portfolio&gt; </span>
+          <input
+            ref={inputRef}
+            value={input}
+            onKeyDown={handleKeyDown}
+            onChange={(e) => setInput(e.target.value)}
+            className="bg-transparent border-none outline-none text-xl text-white w-3/4"
+            autoFocus
+            disabled={isProcessing}
+          />
+        </form>
 
-      <div ref={bottomRef} />
+        <div ref={bottomRef} />
+      </div>
+      <div className="fixed right-0 top-0 h-screen w-1/3 flex items-center justify-center p-4 border-l border-gray-700 bg-black">
+        {currentImage ? (
+          <div className="flex flex-col items-center">
+            <Image
+              src={currentImage.src}
+              alt={currentImage.alt || "Project image"}
+              width={512}
+              height={512}
+              className="rounded-lg shadow-lg cursor-pointer transition-transform hover:scale-105"
+              style={{ imageRendering: "pixelated" }}
+              onClick={() => setCurrentImage(null)}
+            />
+            {currentImage.alt && (
+              <span className="mt-2 text-sm text-gray-300">{currentImage.alt}</span>
+            )}
+            <span className="mt-1 text-xs text-gray-500 italic">(Click image to close)</span>
+          </div>
+        ) : (
+          <span className="text-gray-600 italic">Click an image to preview it here</span>
+        )}
+      </div>
+
     </div>
+
   );
+
+
 }
