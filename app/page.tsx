@@ -47,8 +47,6 @@ export default async function Home() {
       console.warn(`Project ${p.nickname} lines is not an array`, p.data.lines);
     }
   });
-
-  console.log(projData);
-
+  console.log(projData)
   return <Terminal projectData={projData} />;
 }
