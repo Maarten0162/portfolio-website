@@ -18,6 +18,7 @@ export type DelayedLine = {
   text?: string;
   clickabletext?: string;
   image?: string;
+  video?: string;
   imageAlt?: string;
   delay: number;
 }
@@ -171,6 +172,28 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
             <Image
               src={line.image}
               alt={line.imageAlt || "Terminal image"}
+              className="max-w-full h-auto my-2"
+              width={128}
+              height={128}
+              style={{ imageRendering: "pixelated" }}
+            />
+            <span className="block mt-1 text-sm text-white">
+              {line.imageAlt}
+            </span>
+          </div>
+        );
+      }
+
+      if (line.video) {
+        accumulatedOutput.push(
+          <div
+            key={`imagecontainer-${commandIndex}-${i}`}
+            className="inline-block border border-white ml-22 p-2 text-center cursor-pointer hover:bg-gray-800 transition"
+            onClick={() => setCurrentImage({ src: line.image!, alt: line.imageAlt })}
+            title="Click to preview"
+          >
+            <iframe
+              src={line.video}
               className="max-w-full h-auto my-2"
               width={128}
               height={128}

@@ -37,6 +37,8 @@ export default async function Home() {
             return { clickabletext: realClickableText, delay: l.delay ?? 0 };
           case "image":
             return { image: l.content, imageAlt: l.alt ?? "", delay: l.delay ?? 0 };
+          case "video":
+            return { video: l.content, imageAlt: l.alt ?? "", delay: l.delay ?? 0 };
           default:
             return { text: l.content, delay: l.delay ?? 0 }; // fallback
         }
@@ -48,5 +50,5 @@ export default async function Home() {
     }
   });
   console.log(projData)
-  return <Terminal projectData={projData} />;
+  return <Terminal projectData={projData} />
 }
