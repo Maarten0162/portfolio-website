@@ -34,7 +34,7 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
   const [matchIndex, setMatchIndex] = useState(0);
   const [isTabbing, setIsTabbing] = useState(false);
   const [currentImage, setCurrentImage] = useState<{ src: string; alt?: string } | null>(null);
-  const [currentVideo, setCurrentVideo] = useState<{ src: string; } | null>(null);
+  const [currentVideo, setCurrentVideo] = useState<{ src: string; alt?: string } | null>(null);
 
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -49,14 +49,14 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  function SetCurrentVideo (source : string) {
+  function SetCurrentVideo(source: string, alt: string) {
     setCurrentImage(null);
-    setCurrentVideo({ src: source!})
+    setCurrentVideo({ src: source!, alt: alt! })
   };
 
-  function SetCurrentImage ( source: string ) {
+  function SetCurrentImage(source: string) {
     setCurrentVideo(null);
-    setCurrentImage({ src: source!})
+    setCurrentImage({ src: source! })
   };
 
   const focusAndSetCursorToEnd = () => {
@@ -196,19 +196,41 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
       }
 
       if (line.video) {
+
+        const trans1 = line.video.replace("/upload/", "/upload/so_auto/");
+        const videoThumbnail = trans1.replace(/\.(mp4|mov|avi|mkv)$/, ".jpg");
         accumulatedOutput.push(
           <div
             key={`imagecontainer-${commandIndex}-${i}`}
             className="inline-block border border-white ml-22 p-2 text-center cursor-pointer hover:bg-gray-800 transition"
-            onClick={() => SetCurrentVideo(line.video!)}
+            onClick={() => SetCurrentVideo(line.video!, line.imageAlt!)}
             title="Click to preview"
           >
-            <iframe
-              src={line.video}
-              className="max-w-full h-auto my-2"
-              width={128}
-              height={128}
-            />
+            <div className="relative inline-block group cursor-pointer my-2">
+              <div className="relative w-[128px] h-[128px]">
+                <Image
+                  src={videoThumbnail}
+                  alt={line.imageAlt!}
+                  fill
+                  className="object-cover rounded-md"
+                  style={{ imageRendering: "pixelated" }}
+                />
+
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="white"
+                    viewBox="0 0 24 24"
+                    className="w-12 h-12 opacity-80 group-hover:opacity-100"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+
+
             <span className="block mt-1 text-sm text-white">
               {line.imageAlt}
             </span>
@@ -404,16 +426,16 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
         ) : currentVideo ? (
           <div className="flex flex-col items-center">
             <video
-  src={currentVideo.src}
-  width={512}
-  height={512}
-  controls
-  autoPlay
-  loop
-  muted
-  className="rounded-lg shadow-lg cursor-pointer transition-transform hover:scale-105"
-  onClick={() => setCurrentVideo(null)}
-/>
+              src={currentVideo.src}
+              width={512}
+              height={512}
+              controls
+              autoPlay
+              loop
+              muted
+              className="rounded-lg shadow-lg cursor-pointer transition-transform hover:scale-105"
+              onClick={() => setCurrentVideo(null)}
+            />
             <span className="mt-1 text-xs text-gray-500 italic">(Click video to close)</span>
           </div>
         ) : (
