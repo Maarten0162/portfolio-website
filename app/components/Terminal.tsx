@@ -21,6 +21,7 @@ export type DelayedLine = {
   video?: string;
   imageAlt?: string;
   delay: number;
+  link?: string;
 }
 
 
@@ -172,6 +173,21 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
         );
       }
 
+      if (line.link) {
+
+        accumulatedOutput.push(
+          <div key={`link-group-${commandIndex}-${i}`}>
+            <span
+              key={`link-text1-${commandIndex}-${i}`}>Click </span>
+            <span
+              key={`link-${commandIndex}-${i}`}
+              onClick={() => window.open(line.link!, "_blank")} className="cursor-pointer">&lt;HERE&gt;</span>
+            <span
+              key={`link-text2-${commandIndex}-${i}`}> for the repo</span>
+          </div>
+        );
+      }
+
       if (line.image) {
         accumulatedOutput.push(
           <div
@@ -311,6 +327,7 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
       }
 
       await animateDelayedOutput(selectedProject, cmd);
+
       return null;
 
 
