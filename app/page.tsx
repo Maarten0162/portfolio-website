@@ -1,9 +1,10 @@
 import Terminal from "./components/Terminal";
 import { createServer } from "@/lib/supabase/server";
 import { DelayedLine } from "./components/Terminal";
+import { link } from "fs";
 
 interface SupabaseLine {
-  type: "text" | "clickabletext" | "image" | string;
+  type: "text" | "clickabletext" | "image" | "link" | string;
   content: string;
   delay?: number;
   alt?: string;
@@ -39,6 +40,8 @@ export default async function Home() {
             return { image: l.content, imageAlt: l.alt ?? "", delay: l.delay ?? 0 };
           case "video":
             return { video: l.content, imageAlt: l.alt ?? "", delay: l.delay ?? 0 };
+          case "link":
+            return { link: l.content, delay: l.delay ?? 0 };
           default:
             return { text: l.content, delay: l.delay ?? 0 }; // fallback
         }
