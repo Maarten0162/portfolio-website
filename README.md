@@ -5,6 +5,7 @@ Dit portfolio toont mijn vaardigheden op het gebied van **frontend development**
 Het project is ontwikkeld als onderdeel van mijn HBO-ICT opleiding.
 
 🔗 **Live Website:** Bekijk de [website](https://portfolio-website-ecru-omega-46.vercel.app/) hier
+
 💾 **GitHub Repository:** Bekijk de [source code](https://github.com/Maarten0162/portfolio-website) hier
 
 ---
