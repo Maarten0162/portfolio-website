@@ -1,48 +1,91 @@
-Portfolio Website
+# Portfolio – Maarten
 
-A personal portfolio website built with Next.js, showcasing my skills, projects, and experience.
+Dit project is mijn persoonlijke portfolio website, ontworpen als een interactieve **MS-DOS-stijl terminal interface**. Het portfolio laat mijn vaardigheden zien op het gebied van front-end development, interaction design en component-architectuur, verpakt in een uniek en speels concept.
 
-🚀 Features
+---
 
-Responsive Design: Optimized for desktop and mobile devices.
+## 🎯 Doel van het project
 
-Dynamic Routing: Implemented using Next.js for seamless navigation.
+Het doel van deze website is om een digitaal portfolio te maken dat:
 
-SEO Optimized: Includes meta tags and structured data for better search engine visibility.
+- zich onderscheidt van standaard portfolio’s,
+- mijn stijl en interesses weerspiegelt,
+- mijn technische kennis op een praktische manier toont,
+- en bezoekers een intuïtieve maar interactieve ervaring geeft.
 
-Modern UI: Clean and minimalistic design with smooth animations.
+In plaats van een traditionele scrollwebsite navigeert de gebruiker via een command-line interface met eigen commando’s.
 
+---
 
-🛠️ Technologies Used
+## 🖥️ Functionaliteiten
 
-Frontend: React, Next.js
+### Terminal Interface  
+De volledige website functioneert als een retro command-line omgeving, inclusief:
 
-Styling: CSS Modules, Tailwind CSS
+- inputprompt  
+- command parser  
+- command history  
+- automatische formatting  
 
-State Management: React Context API
+### Custom Command System  
+Eigen implementatie van commando’s zoals:  
+`help`, `about`, `projects`, `clear`, `open` en meer.
 
-Deployment: Vercel
+### Afbeeldingen in “terminalstijl”  
+Een renderer die afbeeldingen omzet naar een lage-resolutie terminal-look.
 
+### Interactieve UI-componenten  
+Panels, overlays en thematische elementen die samenwerken binnen de terminalinterface.
 
-📦 Installation
+### Modulaire Architectuur  
+Commands, components en utilities zijn opgesplitst voor uitbreidbaarheid.
 
-Clone the repository and install dependencies:
+---
 
-git clone https://github.com/Maarten0162/portfolio-website.git
-cd portfolio-website
-npm install
+## 🛠️ Technologieën
 
-Run the development server:
+- **Next.js** – Routing & rendering  
+- **React (TypeScript)** – Component-architectuur  
+- **Tailwind CSS** – Styling  
+- **ReactBits** – UI-animatiecomponenten  
+- **Eigen utility layers** zoals:  
+  - terminal engine  
+  - command parser  
+  - image-viewer module  
 
-npm run dev
+---
 
-Open your browser and navigate to http://localhost:3000 to view the website locally.
+## 📐 Ontwerp & Inspiratie
 
-🌐 Live Demo
+Het ontwerp is gebaseerd op klassieke MS-DOS terminals:  
+zwart scherm, groene tekst, beperkte UI en een minimalistische stijl.
 
-Check out the live version of the portfolio website here:
-👉 portfolio-website-ecru-omega-46.vercel.app
+Veel terminalportfolio’s richten zich op een moderne hackerstijl; ik koos juist voor een nauwkeurige retro look, inclusief:
 
-📄 License
+- monospaced font  
+- beperkte kleurenset  
+- grote blokkarakters  
+- horizontale en verticale rasterstructuren  
 
-This project is licensed under the MIT License.
+De image-rendering module is geïnspireerd op Linux-tools die afbeeldingen omzetten naar terminaloutput.
+
+---
+
+## 🌐 Hosting
+
+De portfolio wordt gehost via **Vercel**.
+
+---
+
+## 📄 Licentie
+
+Dit project is persoonlijk en bedoeld als portfolio.  
+Herbruikbare delen zoals de terminal-engine of command-architectuur mogen worden gebruikt met vermelding van bron.
+
+---
+
+## 📬 Contact
+
+Wil je samenwerken of heb je vragen?  
+Neem gerust contact op via de gegevens in de portfolio.
+
