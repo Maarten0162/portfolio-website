@@ -1,91 +1,60 @@
-# Portfolio – Maarten
+# 🖥️ Maarten van den Berg — Portfolio Website
 
-Dit project is mijn persoonlijke portfolio website, ontworpen als een interactieve **MS-DOS-stijl terminal interface**. Het portfolio laat mijn vaardigheden zien op het gebied van front-end development, interaction design en component-architectuur, verpakt in een uniek en speels concept.
+Een persoonlijke portfolio-website in **terminal-stijl**, geïnspireerd door klassieke systemen zoals **MS-DOS** en de **Linux command line**.  
+Dit portfolio toont mijn vaardigheden op het gebied van **frontend development**, **UI/UX design**, en creatief technisch denken.  
+Het project is ontwikkeld als onderdeel van mijn HBO-ICT opleiding.
+
+🔗 **Live Website:** https://portfolio-website-ecru-omega-46.vercel.app/  
+💾 **GitHub Repository:** https://github.com/Maarten0162/portfolio-website
 
 ---
 
 ## 🎯 Doel van het project
 
-Het doel van deze website is om een digitaal portfolio te maken dat:
+De portfolio-website is gebouwd om:
 
-- zich onderscheidt van standaard portfolio’s,
-- mijn stijl en interesses weerspiegelt,
-- mijn technische kennis op een praktische manier toont,
-- en bezoekers een intuïtieve maar interactieve ervaring geeft.
+- Mijn **frontend vaardigheden** te demonstreren  
+- Mijn **design keuzes** en creativiteit te tonen  
+- Bezoekers een unieke, interactieve ervaring te geven  
+- Te laten zien dat ik complexe interfaces kan bouwen met moderne tooling  
 
-In plaats van een traditionele scrollwebsite navigeert de gebruiker via een command-line interface met eigen commando’s.
-
----
-
-## 🖥️ Functionaliteiten
-
-### Terminal Interface  
-De volledige website functioneert als een retro command-line omgeving, inclusief:
-
-- inputprompt  
-- command parser  
-- command history  
-- automatische formatting  
-
-### Custom Command System  
-Eigen implementatie van commando’s zoals:  
-`help`, `about`, `projects`, `clear`, `open` en meer.
-
-### Afbeeldingen in “terminalstijl”  
-Een renderer die afbeeldingen omzet naar een lage-resolutie terminal-look.
-
-### Interactieve UI-componenten  
-Panels, overlays en thematische elementen die samenwerken binnen de terminalinterface.
-
-### Modulaire Architectuur  
-Commands, components en utilities zijn opgesplitst voor uitbreidbaarheid.
+De terminal stijl past goed bij mijn interesses, zoals werken met **Linux**, command-line tools en technische systemen.
 
 ---
 
-## 🛠️ Technologieën
+## 🖼️ Features
 
-- **Next.js** – Routing & rendering  
-- **React (TypeScript)** – Component-architectuur  
-- **Tailwind CSS** – Styling  
-- **ReactBits** – UI-animatiecomponenten  
-- **Eigen utility layers** zoals:  
-  - terminal engine  
-  - command parser  
-  - image-viewer module  
+### 🔹 Interactieve Terminal Interface  
+Bezoekers kunnen via terminal-achtige commando’s door de website navigeren.  
+Deze commando’s zijn gebaseerd op echte Linux/terminal commando’s, zoals:
 
----
+help
+about
+projects
+clear
+ls
+open <project>
 
-## 📐 Ontwerp & Inspiratie
 
-Het ontwerp is gebaseerd op klassieke MS-DOS terminals:  
-zwart scherm, groene tekst, beperkte UI en een minimalistische stijl.
 
-Veel terminalportfolio’s richten zich op een moderne hackerstijl; ik koos juist voor een nauwkeurige retro look, inclusief:
+### 🔹 Database-integratie met Supabase  
+Voor opslag van gegevens zoals projecten is een **Supabase** database gekoppeld.  
+Dit maakt het portfolio uitbreidbaar met dynamische data.
 
-- monospaced font  
-- beperkte kleurenset  
-- grote blokkarakters  
-- horizontale en verticale rasterstructuren  
+### 🔹 Modern & Responsive  
+Hoewel het portfolio een retro look heeft, is de technische basis modern:
 
-De image-rendering module is geïnspireerd op Linux-tools die afbeeldingen omzetten naar terminaloutput.
-
----
-
-## 🌐 Hosting
-
-De portfolio wordt gehost via **Vercel**.
+- Responsive layout  
+- Smooth animaties  
+- Snel laden  
+- Modulaire componenten  
 
 ---
 
-## 📄 Licentie
+## 🛠️ Gebruikte Technologieën
 
-Dit project is persoonlijk en bedoeld als portfolio.  
-Herbruikbare delen zoals de terminal-engine of command-architectuur mogen worden gebruikt met vermelding van bron.
-
----
-
-## 📬 Contact
-
-Wil je samenwerken of heb je vragen?  
-Neem gerust contact op via de gegevens in de portfolio.
+- **Framework:** Next.js  
+- **Taal:** React + TypeScript  
+- **Styling & UI:** Tailwind CSS
+- **Database & Auth:** Supabase  
 
