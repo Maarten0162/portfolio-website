@@ -4,8 +4,8 @@ Een persoonlijke portfolio-website in **terminal-stijl**, geïnspireerd door kla
 Dit portfolio toont mijn vaardigheden op het gebied van **frontend development**, **UI/UX design**, en creatief technisch denken.  
 Het project is ontwikkeld als onderdeel van mijn HBO-ICT opleiding.
 
-🔗 **Live Website:** https://portfolio-website-ecru-omega-46.vercel.app/  
-💾 **GitHub Repository:** https://github.com/Maarten0162/portfolio-website
+🔗 **Live Website:** Bekijk de [website](https://portfolio-website-ecru-omega-46.vercel.app/) hier
+💾 **GitHub Repository:** Bekijk de [source code](https://github.com/Maarten0162/portfolio-website) hier
 
 ---
 
