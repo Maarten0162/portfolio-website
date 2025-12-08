@@ -1,61 +1,99 @@
-# 🖥️ Maarten van den Berg — Portfolio Website
+# Portfolio Website — Maarten van den Berg
 
-Een persoonlijke portfolio-website in **terminal-stijl**, geïnspireerd door klassieke systemen zoals **MS-DOS** en de **Linux command line**.  
-Dit portfolio toont mijn vaardigheden op het gebied van **frontend development**, **UI/UX design**, en creatief technisch denken.  
-Het project is ontwikkeld als onderdeel van mijn HBO-ICT opleiding.
-
-🔗 **Live Website:** Bekijk de [website](https://portfolio-website-ecru-omega-46.vercel.app/) hier
-
-💾 **GitHub Repository:** Bekijk de [source code](https://github.com/Maarten0162/portfolio-website) hier
-
----
-
-## 🎯 Doel van het project
-
-De portfolio-website is gebouwd om:
-
-- Mijn **frontend vaardigheden** te demonstreren  
-- Mijn **design keuzes** en creativiteit te tonen  
-- Bezoekers een unieke, interactieve ervaring te geven  
-- Te laten zien dat ik complexe interfaces kan bouwen met moderne tooling  
-
-De terminal stijl past goed bij mijn interesses, zoals werken met **Linux**, command-line tools en technische systemen.
-
----
-
-## 🖼️ Features
-
-### 🔹 Interactieve Terminal Interface  
-Bezoekers kunnen via terminal-achtige commando’s door de website navigeren.  
-Deze commando’s zijn gebaseerd op echte Linux/terminal commando’s, zoals:
-
-help
-about
-projects
-clear
-ls
-open <project>
+A personal portfolio website built with a **terminal-style interface**, inspired by classic systems such as **MS-DOS** and the **Linux command line**.  
+This project showcases my skills in **frontend development**, **UI/UX design**, and creative technical thinking.  
+It was developed as part of my HBO-ICT study program.
 
 
+## Live Demo
 
-### 🔹 Database-integratie met Supabase  
-Voor opslag van gegevens zoals projecten is een **Supabase** database gekoppeld.  
-Dit maakt het portfolio uitbreidbaar met dynamische data.
+- **Live Website:** https://portfolio-website-ecru-omega-46.vercel.app/  
+- **GitHub Repository:** https://github.com/Maarten0162/portfolio-website
 
-### 🔹 Modern & Responsive  
-Hoewel het portfolio een retro look heeft, is de technische basis modern:
+
+## Overview
+
+The portfolio was created to:
+
+- Demonstrate my frontend development skills  
+- Highlight my design choices and creativity  
+- Provide visitors with a unique, interactive experience  
+- Show that I can build complex interfaces using modern tooling  
+
+The terminal interface reflects my interest in Linux, command-line tools, and technical systems.
+
+
+## Features
+
+### Interactive Terminal Interface
+Visitors can navigate the website using terminal-like commands based on real Linux commands, such as:
+
+```bash
+  help
+  about
+  projects
+  clear
+  ls
+  open <project>
+```
+
+
+
+
+### Supabase Database Integration
+The project includes a **Supabase** backend for storing dynamic data such as project details, making the site modular and easy to expand.
+
+### Modern & Responsive
+Even though the website has a retro aesthetic, it is built with modern technologies:
 
 - Responsive layout  
-- Smooth animaties  
-- Snel laden  
-- Modulaire componenten  
+- Smooth animations  
+- Fast loading performance  
+- Modular component structure  
 
----
 
-## 🛠️ Gebruikte Technologieën
+## Technologies Used
 
 - **Framework:** Next.js  
-- **Taal:** React + TypeScript  
-- **Styling & UI:** Tailwind CSS
+- **Language:** React + TypeScript  
+- **Styling:** Tailwind CSS  
 - **Database & Auth:** Supabase  
 
+## Installation & Development
+
+```bash
+# Clone the repository
+git clone https://github.com/Maarten0162/portfolio-website.git
+
+# Navigate into the project
+cd portfolio-website
+
+# Install dependencies
+npm install
+
+# Run the development server
+npm run dev
+```
+
+## License
+MIT License
+
+Copyright (c) 2025 Maarten van den Berg
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
