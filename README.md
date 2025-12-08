@@ -54,10 +54,56 @@ Even though the website has a retro aesthetic, it is built with modern technolog
 
 ## Technologies Used
 
-- **Framework:** Next.js  
-- **Language:** React + TypeScript  
-- **Styling:** Tailwind CSS  
-- **Database & Auth:** Supabase  
+- **Framework:** Next.js 15.5.6
+- **Language:** React 19.1.0 + TypeScript ^5
+- **Styling:** Tailwind CSS 4.x
+- **Database & Auth:** Supabase 2.76.1
+
+## Installed packages
+- ESlint
+- Supabase SSR
+- Turbopack
+
+## File structure
+
+```txt
+portfolio-website/
+├── .gitattributes
+├── .gitignore
+├── app/
+│   ├── components/
+│   │   └── Terminal.tsx
+│   ├── favicon.ico
+│   ├── fonts/
+│   │   └── perfect-dos-vga-437.woff2
+│   ├── fonts.ts
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── eslint.config.mjs
+├── lib/
+│   ├── commandAlias.ts
+│   ├── commandResponses/
+│   │   ├── aboutLines.ts
+│   │   ├── helpLines.ts
+│   │   └── projectLines.ts
+│   └── supabase/
+│       ├── client.ts
+│       └── server.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── public/
+│   ├── download.png
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+└── tsconfig.json
+```
 
 ## Installation & Development
 
