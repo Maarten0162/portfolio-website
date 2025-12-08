@@ -53,6 +53,9 @@ Even though the website has a retro aesthetic, it is built with modern technolog
 - Fast loading performance  
 - Modular component structure  
 
+### Ideation & Design Choices
+- Chose terminal-style interface to reflect my interest in retro computing and command-line tools.
+- Decided on Next.js + Tailwind for rapid, modular development.
 
 ## Technologies Used
 
