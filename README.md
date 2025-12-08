@@ -18,11 +18,11 @@ It was developed as part of my HBO-ICT study program.
 The portfolio was created to:
 
 - Demonstrate my frontend development skills  
-- Highlight my design choices and creativity  
+- Show off my interest for older hardware and computers
 - Provide visitors with a unique, interactive experience  
-- Show that I can build complex interfaces using modern tooling  
+- Show that I can build complex interfaces using modern tooling.
 
-The terminal interface reflects my interest in Linux, command-line tools, and technical systems.
+The terminal interface reflects my interest in Linux, command-line tools, and technical systems. I chose to make it in a retro style with an MS-Dos style font to show off my interest in hardware and software. I enjoy messing around with computers of all sorts which is why i decided to make an old terminal styled portfolio.
 
 
 ## Features
