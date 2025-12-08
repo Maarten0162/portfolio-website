@@ -1,5 +1,7 @@
 # Portfolio Website — Maarten van den Berg
 
+![Portfolio Screenshot](public/GitBannerPortfolio.png)
+
 A personal portfolio website built with a **terminal-style interface**, inspired by classic systems such as **MS-DOS** and the **Linux command line**.  
 This project showcases my skills in **frontend development**, **UI/UX design**, and creative technical thinking.  
 It was developed as part of my HBO-ICT study program.
