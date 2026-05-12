@@ -18,7 +18,8 @@ export default async function Home() {
   const { data: projects, error } = await supabase
     .from("projects")
     .select("*")
-    .eq("is_hidden", false);
+    .eq("is_hidden", false)
+    .order("order", { ascending: true });
 
   if (error) console.error(error);
 

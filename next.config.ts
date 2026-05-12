@@ -7,8 +7,9 @@ const nextConfig: NextConfig = {
 
 module.exports = {
   images: {
-    remotePatterns: [new URL('https://res.cloudinary.com/ddcqurrxt/**')],
+    remotePatterns: [new URL('https://res.cloudinary.com/progresspicture/**'), new URL("https://placehold.net/*")],
   },
 }
 
 export default nextConfig;
+ 

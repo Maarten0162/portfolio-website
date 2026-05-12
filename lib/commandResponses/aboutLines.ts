@@ -8,7 +8,7 @@ export const  aboutLines: DelayedLine[] = [
 
   { text: "> Name: Maarten\n", delay: 300 },
   { text: "> Role: ICT Student @ Fontys University of Applied Sciences\n", delay: 300 },
-  { text: "> Focus: Software & Game Development\n\n", delay: 300 },
+  { text: "> Focus: Software Engineering\n\n", delay: 300 },
 
   { text: "─────────────────────────────────────────────\n", delay: 200 },
   { text: "SUMMARY:\n", delay: 200 },
@@ -17,8 +17,8 @@ export const  aboutLines: DelayedLine[] = [
 
   { text: "─────────────────────────────────────────────\n", delay: 200 },
   { text: "CORE SKILLS:\n", delay: 200 },
-  { text: "> Programming: C#, JavaScript/TypeScript, SQL\n", delay: 300 },
-  { text: "> Frameworks: .NET, ASP.NET MVC, Next.js, Godot\n", delay: 300 },
+  { text: "> Programming: C#, JavaScript/TypeScript, SQL, Java\n", delay: 300 },
+  { text: "> Frameworks: .NET, ASP.NET MVC, Next.js, Expo.dev, React Native, Godot\n", delay: 300 },
   { text: "> Databases: Supabase, Microsoft SQL Server\n", delay: 300 },
   { text: "> Tools: Git, Visual Studio, VS Code, Figma\n\n", delay: 300 },
 
@@ -27,7 +27,8 @@ export const  aboutLines: DelayedLine[] = [
   { text: "> Building game systems and event-driven logic\n", delay: 300 },
   { text: "> Designing intuitive interfaces and player experiences\n", delay: 300 },
   { text: "> Experimenting with full-stack web architectures\n", delay: 300 },
-  { text: "> Learning new technologies and improving workflow efficiency\n\n", delay: 300 },
+  { text: "> Learning new technologies and improving workflow efficiency\n", delay: 300 },
+  { text: "> Lifting weights in the gym\n\n", delay: 300 },
 
   { text: "─────────────────────────────────────────────\n", delay: 200 },
   { text: "FOCUS:\n", delay: 200 },

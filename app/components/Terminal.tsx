@@ -432,7 +432,7 @@ export default function Terminal({ projectData }: { projectData: Record<string, 
               width={512}
               height={512}
               className="rounded-lg shadow-lg cursor-pointer transition-transform hover:scale-105"
-              style={{ imageRendering: "pixelated" }}
+              style={{ width: "70%", height: "70%", objectFit: "contain" }}
               onClick={() => setCurrentImage(null)}
             />
             {currentImage.alt && (
